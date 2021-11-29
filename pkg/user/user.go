@@ -5,20 +5,17 @@ import (
 	"strconv"
 )
 
-//Пользователь
 type User struct {
-	Id      int    `'json:"id`
+	Id      int    `json: "id"`
 	Name    string `json: "name"`
 	Age     int    `json: "age"`
 	Friends []int  `json: "friends"`
 }
 
-//Инфо о пользователе в виде строки
 func (u *User) ToString() string {
-	return u.Name + " " + strconv.Itoa(u.Age) + " [" + strconv.Itoa(len(u.Friends)) + " друга]"
+	return string(u.Id) + " " + u.Name + " " + strconv.Itoa(u.Age) + " [" + strconv.Itoa(len(u.Friends)) + " друга]"
 }
 
-//Добавление друга пользователю
 func (u *User) AddFriend(userId int) error {
 	index := findIndex(u.Friends, userId)
 	if index == -1 {
@@ -29,7 +26,6 @@ func (u *User) AddFriend(userId int) error {
 	return nil
 }
 
-//Удаление друга у пользователя
 func (u *User) DeleteFriend(userId int) {
 	if len(u.Friends) < 1 {
 		return
@@ -41,7 +37,6 @@ func (u *User) DeleteFriend(userId int) {
 	}
 }
 
-//Поиск индекса в списке пользователей для удаления из друзей
 func findIndex(list []int, userId int) int {
 	for i := 0; i < len(list); i++ {
 		if list[i] == userId {
