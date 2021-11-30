@@ -36,7 +36,7 @@ func Link(s storage.Linker) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		if err := s.Link(t.Source, t.Target); err != nil {
+		if err := s.LinkUsers(t.Source, t.Target); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})

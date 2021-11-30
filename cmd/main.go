@@ -12,10 +12,12 @@ func main() {
 	//Инциализация сервиса с хранилищем
 	storage := storage.New()
 
+	//Инициализация маршрутизатора
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	//Инициализация хендлов запросов
 	r.Get("/users", handler.GetAll(storage))
 	r.Post("/create", handler.Add(storage))
 	r.Post("/makeFriends", handler.Link(storage))
@@ -23,5 +25,6 @@ func main() {
 	r.Put("/{user_id}", handler.Update(storage))
 	r.Get("/friends/{user_id}", handler.GetFriends(storage))
 
+	//Старт сервиса
 	http.ListenAndServe(":3333", r)
 }

@@ -12,19 +12,19 @@ type Getter interface {
 }
 
 type Adder interface {
-	Add(user *user.User)
+	AddUser(user *user.User)
 }
 
 type Deleter interface {
-	Delete(userId int) error
+	DeleteUser(userId int) error
 }
 
 type Linker interface {
-	Link(userLinkFrom int, userLinkTo int) error
+	LinkUsers(userLinkFrom int, userLinkTo int) error
 }
 
 type Updater interface {
-	UpdateAge(userId int, age int) error
+	UpdateUserAge(userId int, age int) error
 }
 
 type Repo struct {
@@ -37,10 +37,12 @@ func New() *Repo {
 	}
 }
 
-func (r *Repo) Add(user *user.User) {
+//Добавление пользователя в хранилище
+func (r *Repo) AddUser(user *user.User) {
 	r.Items[user.Id] = user
 }
 
+//Получение пользователя по идентификатору
 func (r *Repo) Get(userId int) (*user.User, error) {
 	u, ok := r.Items[userId]
 	if !ok {
@@ -50,6 +52,7 @@ func (r *Repo) Get(userId int) (*user.User, error) {
 	}
 }
 
+//Получение всех пользователей в хранилище
 func (r *Repo) GetAll() []*user.User {
 	users := make([]*user.User, 0)
 	if len(r.Items) > 0 {
@@ -60,6 +63,7 @@ func (r *Repo) GetAll() []*user.User {
 	return users
 }
 
+//Получение друзей пользователя
 func (r *Repo) GetFriends(userId int) ([]*user.User, error) {
 	u, err := r.Get(userId)
 	if err != nil {
@@ -72,7 +76,8 @@ func (r *Repo) GetFriends(userId int) ([]*user.User, error) {
 	return friends, nil
 }
 
-func (r *Repo) Delete(userId int) error {
+//Удаление пользователя из хранилища
+func (r *Repo) DeleteUser(userId int) error {
 	if _, err := r.Get(userId); err != nil {
 		return err
 	}
@@ -86,7 +91,8 @@ func (r *Repo) Delete(userId int) error {
 	return nil
 }
 
-func (r *Repo) UpdateAge(userId int, age int) error {
+//Обновление возраста пользователя
+func (r *Repo) UpdateUserAge(userId int, age int) error {
 	if _, err := r.Get(userId); err != nil {
 		return err
 	}
@@ -95,7 +101,8 @@ func (r *Repo) UpdateAge(userId int, age int) error {
 	return nil
 }
 
-func (r *Repo) Link(userLinkFrom int, userLinkTo int) error {
+//Добавление пользователя в друзья
+func (r *Repo) LinkUsers(userLinkFrom int, userLinkTo int) error {
 	linkFrom, _ := r.Get(userLinkFrom)
 	linkTo, _ := r.Get(userLinkTo)
 

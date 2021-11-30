@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"strconv"
 )
 
 type User struct {
@@ -12,10 +11,7 @@ type User struct {
 	Friends []int  `json:"friends"`
 }
 
-func (u *User) ToString() string {
-	return string(u.Id) + " " + u.Name + " " + strconv.Itoa(u.Age) + " [" + strconv.Itoa(len(u.Friends)) + " друга]"
-}
-
+//Добавление друга
 func (u *User) AddFriend(userId int) error {
 	index := findIndex(u.Friends, userId)
 	if index == -1 {
@@ -26,6 +22,7 @@ func (u *User) AddFriend(userId int) error {
 	return nil
 }
 
+//Удаление друга
 func (u *User) DeleteFriend(userId int) {
 	if len(u.Friends) < 1 {
 		return
@@ -36,6 +33,7 @@ func (u *User) DeleteFriend(userId int) {
 	}
 }
 
+//Поиск индекса в слайсе
 func findIndex(list []int, userId int) int {
 	for i := 0; i < len(list); i++ {
 		if list[i] == userId {

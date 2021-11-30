@@ -36,7 +36,7 @@ func Delete(s storage.Deleter) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		if err := s.Delete(t.Source); err != nil {
+		if err := s.DeleteUser(t.Source); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})

@@ -47,7 +47,7 @@ func Update(s storage.Updater) http.HandlerFunc {
 			w.Write(data)
 			return
 		}
-		if err := s.UpdateAge(userId, t.NewAge); err != nil {
+		if err := s.UpdateUserAge(userId, t.NewAge); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})

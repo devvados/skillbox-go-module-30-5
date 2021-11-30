@@ -27,7 +27,7 @@ func Add(s storage.Adder) http.HandlerFunc {
 			w.Write([]byte(err.Error()))
 			return
 		}
-		s.Add(&u)
+		s.AddUser(&u)
 
 		//Формирование ответа
 		data, _ := json.Marshal(api.ResponseDTO{
