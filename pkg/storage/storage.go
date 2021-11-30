@@ -52,7 +52,9 @@ func (r *Repo) Delete(userId int) error {
 
 	//Сначала удаление из друзей
 	for _, u := range r.Items {
-		u.DeleteFriend(userId)
+		if err := u.DeleteFriend(userId); err != nil {
+			return err
+		}
 	}
 	//Затем удаление из списка совсем
 	delete(r.Items, userId)

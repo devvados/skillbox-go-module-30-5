@@ -19,6 +19,7 @@ func main() {
 	r.Get("/users", handler.Get(storage))
 	r.Post("/create", handler.Add(storage))
 	r.Post("/makeFriends", handler.Link(storage))
+	r.Delete("/delete", handler.Delete(storage))
 
 	http.ListenAndServe(":3333", r)
 }

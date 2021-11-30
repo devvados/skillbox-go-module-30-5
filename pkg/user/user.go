@@ -26,15 +26,17 @@ func (u *User) AddFriend(userId int) error {
 	return nil
 }
 
-func (u *User) DeleteFriend(userId int) {
+func (u *User) DeleteFriend(userId int) error {
 	if len(u.Friends) < 1 {
-		return
+		return errors.New("У пользователя нет друзей")
 	}
-
 	index := findIndex(u.Friends, userId)
 	if index > -1 {
 		u.Friends = append(u.Friends[:index], u.Friends[index+1:]...)
+	} else {
+		return errors.New("У пользователя не найден такой друг")
 	}
+	return nil
 }
 
 func findIndex(list []int, userId int) int {
