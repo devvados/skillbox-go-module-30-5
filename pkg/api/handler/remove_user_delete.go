@@ -14,7 +14,10 @@ func Delete(s storage.Deleter) http.HandlerFunc {
 		content, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			data, _ := json.Marshal(api.ResponseErrorDTO{
+				Message: err.Error(),
+			})
+			w.Write(data)
 			return
 		}
 		defer r.Body.Close()
@@ -23,23 +26,27 @@ func Delete(s storage.Deleter) http.HandlerFunc {
 		var t api.RequestDTO
 		if err := json.Unmarshal(content, &t); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			data, _ := json.Marshal(api.ResponseErrorDTO{
+				Message: err.Error(),
+			})
+			w.Write(data)
 			return
 		}
 
 		//Формирование ответа
-		var message string
 		var status int
+		var data []byte
 		if err := s.Delete(t.Source); err != nil {
-			message = err.Error()
+			data, _ = json.Marshal(api.ResponseErrorDTO{
+				Message: err.Error(),
+			})
 			status = http.StatusInternalServerError
 		} else {
-			message = "Пользователь удален"
-			status = http.StatusCreated
+			data, _ = json.Marshal(api.ResponseDTO{
+				Message: "Пользователь удален",
+			})
+			status = http.StatusOK
 		}
-		data, _ := json.Marshal(api.ResponseDTO{
-			Message: message,
-		})
 		w.WriteHeader(status)
 		w.Write(data)
 	}

@@ -6,14 +6,17 @@ import (
 )
 
 type RequestDTO struct {
-	Source int `json: "source_id"`
-	Target int `json: "target_id"`
+	Source int `json:"source_id"`
+	Target int `json:"target_id"`
+	NewAge int `json:"new age"`
 }
 
 type ResponseDTO struct {
-	Error   int          `json: "error"`
-	Message string       `json: "message"`
-	Items   []*user.User `json: "items"`
+	Message string       `json:"message"`
+	Items   []*user.User `json:"items"`
+}
+type ResponseErrorDTO struct {
+	Message string `json:"message"`
 }
 
 type Service struct {

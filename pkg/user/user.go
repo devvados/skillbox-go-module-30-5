@@ -6,10 +6,10 @@ import (
 )
 
 type User struct {
-	Id      int    `json: "id"`
-	Name    string `json: "name"`
-	Age     int    `json: "age"`
-	Friends []int  `json: "friends"`
+	Id      int    `json:"id"`
+	Name    string `json:"name"`
+	Age     int    `json:"age"`
+	Friends []int  `json:"friends"`
 }
 
 func (u *User) ToString() string {
@@ -26,17 +26,14 @@ func (u *User) AddFriend(userId int) error {
 	return nil
 }
 
-func (u *User) DeleteFriend(userId int) error {
+func (u *User) DeleteFriend(userId int) {
 	if len(u.Friends) < 1 {
-		return errors.New("У пользователя нет друзей")
+		return
 	}
 	index := findIndex(u.Friends, userId)
 	if index > -1 {
 		u.Friends = append(u.Friends[:index], u.Friends[index+1:]...)
-	} else {
-		return errors.New("У пользователя не найден такой друг")
 	}
-	return nil
 }
 
 func findIndex(list []int, userId int) int {

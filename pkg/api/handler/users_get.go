@@ -5,22 +5,18 @@ import (
 	"net/http"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/api"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/storage"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/user"
 )
 
-func Get(storage *storage.Repo) http.HandlerFunc {
+func GetAll(s storage.Getter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var items = make([]*user.User, 0)
-		for _, val := range storage.Items {
-			items = append(items, val)
-		}
+		users := s.GetAll()
 
 		//Формирование ответа
 		data, _ := json.Marshal(api.ResponseDTO{
 			Message: "Операция выполнена успешно",
-			Items:   items,
+			Items:   users,
 		})
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusOK)
 		w.Write(data)
 	}
 }

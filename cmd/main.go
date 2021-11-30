@@ -16,10 +16,12 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/users", handler.Get(storage))
+	r.Get("/users", handler.GetAll(storage))
 	r.Post("/create", handler.Add(storage))
 	r.Post("/makeFriends", handler.Link(storage))
 	r.Delete("/delete", handler.Delete(storage))
+	r.Put("/{user_id}", handler.Update(storage))
+	r.Get("/friends/{user_id}", handler.GetFriends(storage))
 
 	http.ListenAndServe(":3333", r)
 }

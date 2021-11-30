@@ -33,7 +33,7 @@ func Add(s storage.Adder) http.HandlerFunc {
 		data, _ := json.Marshal(api.ResponseDTO{
 			Message: "Пользователь создан",
 		})
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusOK)
 		w.Write(data)
 	}
 }
