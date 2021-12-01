@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"net/http"
@@ -9,6 +10,8 @@ import (
 )
 
 func main() {
+	port := ":3333"
+
 	//Инциализация сервиса с хранилищем
 	storage := repositories.NewLocalRepository()
 
@@ -25,6 +28,7 @@ func main() {
 	r.Put("/{user_id}", handlers.Update(storage))
 	r.Get("/friends/{user_id}", handlers.GetFriends(storage))
 
+	fmt.Printf("Started listening on port %s", port)
 	//Старт сервиса
-	http.ListenAndServe(":3333", r)
+	http.ListenAndServe(port, r)
 }
