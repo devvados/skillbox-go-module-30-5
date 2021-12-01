@@ -1,22 +1,22 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/api"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/storage"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
 	"strconv"
 	"strings"
 )
 
-func GetFriends(s storage.Getter) http.HandlerFunc {
+func GetFriends(repo interfaces.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Формирование ответа
 		var status int
 		var data []byte
 		userId, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/friends/"))
 
-		users, err := s.GetFriends(userId)
+		users, err := repo.GetFriends(userId)
 		if err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),

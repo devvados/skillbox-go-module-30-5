@@ -1,14 +1,16 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/api"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/storage"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
+	"strconv"
+	"strings"
 )
 
-func Link(s storage.Linker) http.HandlerFunc {
+func Update(repo interfaces.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Чтение запроса
 		content, err := ioutil.ReadAll(r.Body)
@@ -36,14 +38,23 @@ func Link(s storage.Linker) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		if err := s.LinkUsers(t.Source, t.Target); err != nil {
+		userId, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			data, _ := json.Marshal(api.ResponseErrorDTO{
+				Message: err.Error(),
+			})
+			w.Write(data)
+			return
+		}
+		if err := repo.UpdateUserAge(userId, t.NewAge); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})
 			status = http.StatusInternalServerError
 		} else {
 			data, _ = json.Marshal(api.ResponseDTO{
-				Message: "Пользователи добавлены в друзья друг к другу",
+				Message: "Возраст пользователя обновлен",
 			})
 			status = http.StatusOK
 		}

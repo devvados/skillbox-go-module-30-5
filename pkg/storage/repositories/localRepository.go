@@ -1,49 +1,28 @@
-package storage
+package repositories
 
 import (
 	"errors"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/user"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/model"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
 )
 
-type Getter interface {
-	Get(userId int) (*user.User, error)
-	GetAll() []*user.User
-	GetFriends(userId int) ([]*user.User, error)
+type LocalRepository struct {
+	Items map[int]*model.User
 }
 
-type Adder interface {
-	AddUser(user *user.User)
-}
-
-type Deleter interface {
-	DeleteUser(userId int) error
-}
-
-type Linker interface {
-	LinkUsers(userLinkFrom int, userLinkTo int) error
-}
-
-type Updater interface {
-	UpdateUserAge(userId int, age int) error
-}
-
-type Repo struct {
-	Items map[int]*user.User
-}
-
-func New() *Repo {
-	return &Repo{
-		make(map[int]*user.User),
+func NewLocalRepository() interfaces.Repository {
+	return LocalRepository{
+		Items: make(map[int]*model.User),
 	}
 }
 
 //Добавление пользователя в хранилище
-func (r *Repo) AddUser(user *user.User) {
+func (r LocalRepository) AddUser(user *model.User) {
 	r.Items[user.Id] = user
 }
 
 //Получение пользователя по идентификатору
-func (r *Repo) Get(userId int) (*user.User, error) {
+func (r LocalRepository) Get(userId int) (*model.User, error) {
 	u, ok := r.Items[userId]
 	if !ok {
 		return nil, errors.New("Пользователь не найден")
@@ -53,8 +32,8 @@ func (r *Repo) Get(userId int) (*user.User, error) {
 }
 
 //Получение всех пользователей в хранилище
-func (r *Repo) GetAll() []*user.User {
-	users := make([]*user.User, 0)
+func (r LocalRepository) GetAll() []*model.User {
+	users := make([]*model.User, 0)
 	if len(r.Items) > 0 {
 		for _, u := range r.Items {
 			users = append(users, u)
@@ -64,12 +43,12 @@ func (r *Repo) GetAll() []*user.User {
 }
 
 //Получение друзей пользователя
-func (r *Repo) GetFriends(userId int) ([]*user.User, error) {
+func (r LocalRepository) GetFriends(userId int) ([]*model.User, error) {
 	u, err := r.Get(userId)
 	if err != nil {
 		return nil, err
 	}
-	friends := make([]*user.User, 0)
+	friends := make([]*model.User, 0)
 	for _, val := range u.Friends {
 		friends = append(friends, r.Items[val])
 	}
@@ -77,7 +56,7 @@ func (r *Repo) GetFriends(userId int) ([]*user.User, error) {
 }
 
 //Удаление пользователя из хранилища
-func (r *Repo) DeleteUser(userId int) error {
+func (r LocalRepository) DeleteUser(userId int) error {
 	if _, err := r.Get(userId); err != nil {
 		return err
 	}
@@ -92,7 +71,7 @@ func (r *Repo) DeleteUser(userId int) error {
 }
 
 //Обновление возраста пользователя
-func (r *Repo) UpdateUserAge(userId int, age int) error {
+func (r LocalRepository) UpdateUserAge(userId int, age int) error {
 	if _, err := r.Get(userId); err != nil {
 		return err
 	}
@@ -102,7 +81,7 @@ func (r *Repo) UpdateUserAge(userId int, age int) error {
 }
 
 //Добавление пользователя в друзья
-func (r *Repo) LinkUsers(userLinkFrom int, userLinkTo int) error {
+func (r LocalRepository) LinkUsers(userLinkFrom int, userLinkTo int) error {
 	linkFrom, _ := r.Get(userLinkFrom)
 	linkTo, _ := r.Get(userLinkTo)
 

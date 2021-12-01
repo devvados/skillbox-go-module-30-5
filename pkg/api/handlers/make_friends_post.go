@@ -1,14 +1,14 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/api"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/storage"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
 )
 
-func Delete(s storage.Deleter) http.HandlerFunc {
+func Link(repo interfaces.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Чтение запроса
 		content, err := ioutil.ReadAll(r.Body)
@@ -36,14 +36,14 @@ func Delete(s storage.Deleter) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		if err := s.DeleteUser(t.Source); err != nil {
+		if err := repo.LinkUsers(t.Source, t.Target); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})
 			status = http.StatusInternalServerError
 		} else {
 			data, _ = json.Marshal(api.ResponseDTO{
-				Message: "Пользователь удален",
+				Message: "Пользователи добавлены в друзья друг к другу",
 			})
 			status = http.StatusOK
 		}

@@ -1,8 +1,8 @@
 package api
 
 import (
-	"skillbox/module30/skillbox-go-module-30-5/pkg/storage"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/user"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/model"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
 )
 
 //DTO для объекта запроса
@@ -14,8 +14,8 @@ type RequestDTO struct {
 
 //DTO для объекта ответа
 type ResponseDTO struct {
-	Message string       `json:"message"`
-	Items   []*user.User `json:"items"`
+	Message string        `json:"message"`
+	Items   []*model.User `json:"items"`
 }
 
 //DTO для объекта ответа с ошибкой
@@ -23,6 +23,6 @@ type ResponseErrorDTO struct {
 	Message string `json:"message"`
 }
 
-type Service struct {
-	Repo *storage.Repo
+type Server struct {
+	Repo *interfaces.Repository
 }

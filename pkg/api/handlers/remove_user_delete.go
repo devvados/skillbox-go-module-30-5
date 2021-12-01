@@ -1,16 +1,14 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/api"
-	"skillbox/module30/skillbox-go-module-30-5/pkg/storage"
-	"strconv"
-	"strings"
+	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
 )
 
-func Update(s storage.Updater) http.HandlerFunc {
+func Delete(repo interfaces.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Чтение запроса
 		content, err := ioutil.ReadAll(r.Body)
@@ -38,23 +36,14 @@ func Update(s storage.Updater) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		userId, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/"))
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			data, _ := json.Marshal(api.ResponseErrorDTO{
-				Message: err.Error(),
-			})
-			w.Write(data)
-			return
-		}
-		if err := s.UpdateUserAge(userId, t.NewAge); err != nil {
+		if err := repo.DeleteUser(t.Source); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})
 			status = http.StatusInternalServerError
 		} else {
 			data, _ = json.Marshal(api.ResponseDTO{
-				Message: "Возраст пользователя обновлен",
+				Message: "Пользователь удален",
 			})
 			status = http.StatusOK
 		}
