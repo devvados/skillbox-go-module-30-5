@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -27,7 +28,7 @@ func Add(repo interfaces.Repository) http.HandlerFunc {
 			w.Write([]byte(err.Error()))
 			return
 		}
-		repo.AddUser(&u)
+		repo.AddUser(context.TODO(), &u)
 
 		//Формирование ответа
 		data, _ := json.Marshal(api.ResponseDTO{

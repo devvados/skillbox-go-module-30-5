@@ -5,10 +5,10 @@ import (
 )
 
 type User struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Age     int    `json:"age"`
-	Friends []int  `json:"friends"`
+	Id      int    `json:"id" bson:"_id"`
+	Name    string `json:"name" bson:"name"`
+	Age     int    `json:"age" bson:"age"`
+	Friends []int  `json:"friends" bson:"friends"`
 }
 
 //Добавление друга

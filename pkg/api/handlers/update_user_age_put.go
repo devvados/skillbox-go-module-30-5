@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -47,7 +48,7 @@ func Update(repo interfaces.Repository) http.HandlerFunc {
 			w.Write(data)
 			return
 		}
-		if err := repo.UpdateUserAge(userId, t.NewAge); err != nil {
+		if err := repo.UpdateUserAge(context.TODO(), userId, t.NewAge); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})

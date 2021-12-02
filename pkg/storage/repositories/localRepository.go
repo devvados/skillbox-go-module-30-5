@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"context"
 	"errors"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/model"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/storage/interfaces"
@@ -17,12 +18,12 @@ func NewLocalRepository() interfaces.Repository {
 }
 
 //Добавление пользователя в хранилище
-func (r LocalRepository) AddUser(user *model.User) {
+func (r LocalRepository) AddUser(ctx context.Context, user *model.User) {
 	r.Items[user.Id] = user
 }
 
 //Получение пользователя по идентификатору
-func (r LocalRepository) Get(userId int) (*model.User, error) {
+func (r LocalRepository) Get(ctx context.Context, userId int) (*model.User, error) {
 	u, ok := r.Items[userId]
 	if !ok {
 		return nil, errors.New("Пользователь не найден")
@@ -32,7 +33,7 @@ func (r LocalRepository) Get(userId int) (*model.User, error) {
 }
 
 //Получение всех пользователей в хранилище
-func (r LocalRepository) GetAll() []*model.User {
+func (r LocalRepository) GetAll(ctx context.Context) []*model.User {
 	users := make([]*model.User, 0)
 	if len(r.Items) > 0 {
 		for _, u := range r.Items {
@@ -43,8 +44,8 @@ func (r LocalRepository) GetAll() []*model.User {
 }
 
 //Получение друзей пользователя
-func (r LocalRepository) GetFriends(userId int) ([]*model.User, error) {
-	u, err := r.Get(userId)
+func (r LocalRepository) GetFriends(ctx context.Context, userId int) ([]*model.User, error) {
+	u, err := r.Get(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +57,8 @@ func (r LocalRepository) GetFriends(userId int) ([]*model.User, error) {
 }
 
 //Удаление пользователя из хранилища
-func (r LocalRepository) DeleteUser(userId int) error {
-	if _, err := r.Get(userId); err != nil {
+func (r LocalRepository) DeleteUser(ctx context.Context, userId int) error {
+	if _, err := r.Get(ctx, userId); err != nil {
 		return err
 	}
 	//Сначала удаление из друзей
@@ -71,8 +72,8 @@ func (r LocalRepository) DeleteUser(userId int) error {
 }
 
 //Обновление возраста пользователя
-func (r LocalRepository) UpdateUserAge(userId int, age int) error {
-	if _, err := r.Get(userId); err != nil {
+func (r LocalRepository) UpdateUserAge(ctx context.Context, userId int, age int) error {
+	if _, err := r.Get(ctx, userId); err != nil {
 		return err
 	}
 	r.Items[userId].Age = age
@@ -81,9 +82,9 @@ func (r LocalRepository) UpdateUserAge(userId int, age int) error {
 }
 
 //Добавление пользователя в друзья
-func (r LocalRepository) LinkUsers(userLinkFrom int, userLinkTo int) error {
-	linkFrom, _ := r.Get(userLinkFrom)
-	linkTo, _ := r.Get(userLinkTo)
+func (r LocalRepository) LinkUsers(ctx context.Context, userLinkFrom int, userLinkTo int) error {
+	linkFrom, _ := r.Get(ctx, userLinkFrom)
+	linkTo, _ := r.Get(ctx, userLinkTo)
 
 	if linkFrom == nil || linkTo == nil {
 		return errors.New("Один или оба из пользователя не найдены")

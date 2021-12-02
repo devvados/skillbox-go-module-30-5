@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"skillbox/module30/skillbox-go-module-30-5/pkg/api"
@@ -16,7 +17,7 @@ func GetFriends(repo interfaces.Repository) http.HandlerFunc {
 		var data []byte
 		userId, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/friends/"))
 
-		users, err := repo.GetFriends(userId)
+		users, err := repo.GetFriends(context.TODO(), userId)
 		if err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),

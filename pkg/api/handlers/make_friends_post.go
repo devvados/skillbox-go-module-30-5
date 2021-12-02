@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -36,7 +37,7 @@ func Link(repo interfaces.Repository) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		if err := repo.LinkUsers(t.Source, t.Target); err != nil {
+		if err := repo.LinkUsers(context.TODO(), t.Source, t.Target); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})

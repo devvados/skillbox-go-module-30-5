@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -36,7 +37,7 @@ func Delete(repo interfaces.Repository) http.HandlerFunc {
 		//Формирование ответа
 		var status int
 		var data []byte
-		if err := repo.DeleteUser(t.Source); err != nil {
+		if err := repo.DeleteUser(context.TODO(), t.Source); err != nil {
 			data, _ = json.Marshal(api.ResponseErrorDTO{
 				Message: err.Error(),
 			})
